@@ -29,6 +29,12 @@ float4 ApplyClouds(float4 originalColor, float2 texCoord, float timer, Texture2D
     return originalColor + noise;
 }
 
+//+++++++++++++++++++++++++++++
+// UI Controls for Cloud Parameters
+//+++++++++++++++++++++++++++++
+float CloudDensity < string UIName = "Clouds:: Density"; float UIMin = 0.0; float UIMax = 1.0; > = { 0.5 };
+float CloudSpeed < string UIName = "Clouds:: Speed"; float UIMin = 0.0; float UIMax = 10.0; > = { 1.0 };
+
 float4 Timer;
 float4 ScreenSize;
 float4 Weather;
@@ -422,6 +428,8 @@ float4 PS_mr2(VS_OUTPUT_POST0 IN) : SV_Target
 	samp *= samp;
 	samp *= samp;
 	res.xyz += samp * IN.txcoord0.z * rcol;
+	ENBSetEffectConstant(5, 16, CloudDensity);
+	ENBSetEffectConstant(5, 17, CloudSpeed);
 	res = ApplyClouds(res, IN.txcoord0.xy, Timer.x, noisetex, Sampler1);
 	return res;
 }
