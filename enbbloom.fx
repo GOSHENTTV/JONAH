@@ -64,9 +64,6 @@ float VigOffset < string UIName = "RainLens:: Vignette"; float UIStep = 0.001; >
 float llight < string UIName = "RainLens:: Lighting"; > = { 4.0 };
 float lspec < string UIName = "RainLens:: Refraction"; float UIMin = 0.0; float UIMax = 1.0; float UIStep = 0.0001; > = { 0.02 };
 bool rf < string UIName = "RainLens:: Force Enable"; > = { false };
-int separator3 < string UIName = "    "; int UIMin = 0; int UIMax = 0; > = { 0 };
-float CloudSpeed < string UIName = "Clouds:: Speed"; float UIMin = 0.0; float UIMax = 10.0; > = { 1.0 };
-float CloudDensity < string UIName = "Clouds:: Density"; float UIMin = 0.0; float UIMax = 1.0; > = { 0.5 };
 float4 Test2 < string UIName = "Test2"; string UIWidget = "color"; int UIHidden = 1; > ;
 float4 Test3 < string UIName = "Test3"; string UIWidget = "color"; int UIHidden = 1; > ;
 
@@ -369,9 +366,7 @@ float4 PS_GaussV(VS_OUTPUT_POST IN, uniform Texture2D inputtex, uniform float sr
 
 float4 PS_BloomMix(VS_OUTPUT_POST IN, float4 v0 : SV_Position0) : SV_Target
 {
-	float2 noise_coord = (v0.xy / 1.0) + (Timer.x * CloudSpeed);
-	float noise = noisetex.Sample(Sampler1, noise_coord).x * 2.0 - 1.0;
-	noise *= CloudDensity;
+	float noise = noisetex.Load(int3((int2)v0.xy & int2(63, 63), 0)).x * 2.0 - 1.0;
 	float3 res = RenderTarget1024.Sample(Sampler1, IN.txcoord0.xy).xyz * 0.6;
 	res += RenderTarget512.Sample(Sampler1, IN.txcoord0.xy).xyz;
 	res += RenderTarget256.Sample(Sampler1, IN.txcoord0.xy).xyz;
@@ -416,6 +411,7 @@ float4 PS_mr2(VS_OUTPUT_POST0 IN) : SV_Target
 	samp *= samp;
 	samp *= samp;
 	res.xyz += samp * IN.txcoord0.z * rcol;
+	res = ApplyClouds(res, IN.txcoord0.xy);
 	return res;
 }
 
