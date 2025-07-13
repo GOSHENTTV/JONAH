@@ -18,6 +18,8 @@
 
 #include "ENBFeeder.fxh"
 
+float CloudSpeed < string UIName = "Clouds:: Speed"; float UIMin = 0.0; float UIMax = 10.0; > = { 1.0 };
+float CloudDensity < string UIName = "Clouds:: Density"; float UIMin = 0.0; float UIMax = 1.0; > = { 0.5 };
 float g_cloud_density;
 float g_cloud_speed;
 
