@@ -18,14 +18,14 @@
 
 #include "ENBFeeder.fxh"
 
-float CloudSpeed < string UIName = "Clouds:: Speed"; float UIMin = 0.0; float UIMax = 10.0; > = { 1.0 };
-float CloudDensity < string UIName = "Clouds:: Density"; float UIMin = 0.0; float UIMax = 1.0; > = { 0.5 };
+float g_cloud_density;
+float g_cloud_speed;
 
 float4 ApplyClouds(float4 originalColor, float2 texCoord, float timer, Texture2D noiseTexture, sampler noiseSampler)
 {
-    float2 noise_coord = texCoord + (timer * CloudSpeed * 0.01);
+    float2 noise_coord = texCoord + (timer * g_cloud_speed * 0.01);
     float noise = noiseTexture.Sample(noiseSampler, noise_coord).x;
-    noise *= CloudDensity;
+    noise *= g_cloud_density;
     return originalColor + noise;
 }
 
@@ -424,6 +424,8 @@ float4 PS_mr2(VS_OUTPUT_POST0 IN) : SV_Target
 	samp *= samp;
 	samp *= samp;
 	res.xyz += samp * IN.txcoord0.z * rcol;
+	g_cloud_density = CloudDensity;
+	g_cloud_speed = CloudSpeed;
 	res = ApplyClouds(res, IN.txcoord0.xy, Timer.x, noisetex, Sampler1);
 	return res;
 }
