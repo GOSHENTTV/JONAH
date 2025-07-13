@@ -422,8 +422,8 @@ float4 PS_mr2(VS_OUTPUT_POST0 IN) : SV_Target
 	samp *= samp;
 	samp *= samp;
 	res.xyz += samp * IN.txcoord0.z * rcol;
-	ENBSetEffectConstant(5, 16, CloudDensity);
-	ENBSetEffectConstant(5, 17, CloudSpeed);
+	ENBSetEffectConstant(cb5, 16, CloudDensity);
+	ENBSetEffectConstant(cb5, 17, CloudSpeed);
 	res = ApplyClouds(res, IN.txcoord0.xy, Timer.x, noisetex, Sampler1);
 	return res;
 }
