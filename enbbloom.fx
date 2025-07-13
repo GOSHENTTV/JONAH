@@ -18,6 +18,17 @@
 
 #include "ENBFeeder.fxh"
 
+float CloudSpeed < string UIName = "Clouds:: Speed"; float UIMin = 0.0; float UIMax = 10.0; > = { 1.0 };
+float CloudDensity < string UIName = "Clouds:: Density"; float UIMin = 0.0; float UIMax = 1.0; > = { 0.5 };
+
+float4 ApplyClouds(float4 originalColor, float2 texCoord)
+{
+    float2 noise_coord = texCoord + (Timer.x * CloudSpeed * 0.01);
+    float noise = noisetex.Sample(Sampler1, noise_coord).x;
+    noise *= CloudDensity;
+    return originalColor + noise;
+}
+
 float4 Timer;
 float4 ScreenSize;
 float4 Weather;
