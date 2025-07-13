@@ -21,7 +21,7 @@
 float CloudSpeed < string UIName = "Clouds:: Speed"; float UIMin = 0.0; float UIMax = 10.0; > = { 1.0 };
 float CloudDensity < string UIName = "Clouds:: Density"; float UIMin = 0.0; float UIMax = 1.0; > = { 0.5 };
 
-float4 ApplyClouds(float4 originalColor, float2 texCoord, float timer, texture2D noiseTexture, sampler noiseSampler)
+float4 ApplyClouds(float4 originalColor, float2 texCoord, float timer, Texture2D noiseTexture, sampler noiseSampler)
 {
     float2 noise_coord = texCoord + (timer * CloudSpeed * 0.01);
     float noise = noiseTexture.Sample(noiseSampler, noise_coord).x;
